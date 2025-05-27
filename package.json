@@ -45,9 +45,11 @@
   "author": "Thada Wangthammang",
   "license": "MIT",
   "files": [
+    "bin.mjs",
     "dist",
-    "README.md",
-    "package.json"
+    "src",
+    "package.json",
+    "README.md"
   ],
   "repository": {
     "type": "git",
