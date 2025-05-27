@@ -1,18 +1,20 @@
-// zbuild v0.0.1
+// upbuild v0.0.1
 import esbuild from 'esbuild';
 import chokidar from 'chokidar';
 import path from 'node:path';
 import fs from 'fs/promises';
 import z from 'zod';
 import { execa } from 'execa';
+import { ILogger, ConsoleLogger } from '@thaitype/core-utils'
 
-export interface ZBuildOptions {
+export interface UpBuildOptions {
   esbuildOptions: esbuild.BuildOptions;
   cwd?: string;
   mode?: 'watch' | 'build';
   verbose?: boolean;
   targetDir?: string;
   watchDirectories?: string[];
+  logger?: ILogger;
 }
 
 const defaultOptions: esbuild.BuildOptions = {
@@ -24,19 +26,19 @@ const defaultOptions: esbuild.BuildOptions = {
   target: ['node22'],
 };
 
-export async function watch(options: ZBuildOptions, buildCallback: () => Promise<void>) {
+export async function watch(options: UpBuildOptions, buildCallback: () => Promise<void>) {
   if (!options.watchDirectories || options.watchDirectories.length === 0) {
     throw new Error('No directories specified to watch.');
   }
   const watchPaths = options.watchDirectories.map(dir => path.join(options.cwd ?? '', dir));
-  console.log(`Watching directories: ${watchPaths.join(', ')}`);
+  options.logger?.log(`Watching directories: ${watchPaths.join(', ')}`);
   const watcher = chokidar.watch(watchPaths);
 
   watcher.on('change', path => {
-    console.log(`📄 File changed: ${path}`);
+    options.logger?.log(`📄 File changed: ${path}`);
     buildCallback()
       .then(
-        () => console.log('Build completed successfully.')
+        () => options.logger?.log('Build completed successfully.')
       ).catch(err => {
         console.error('Error during build:', err);
       });
@@ -44,17 +46,17 @@ export async function watch(options: ZBuildOptions, buildCallback: () => Promise
 
 }
 
-export async function build(option: ZBuildOptions) {
-  const { verbose, cwd = process.cwd() } = option;
+export async function build(options: UpBuildOptions) {
+  const { verbose, cwd = process.cwd() } = options;
 
   // Build configuration
   const config: esbuild.BuildOptions = {
     ...defaultOptions,
-    ...option.esbuildOptions,
+    ...options.esbuildOptions,
   };
 
   if (verbose) {
-    console.log('ZBuild Configuration:', JSON.stringify(config, null, 2));
+    options.logger?.log('UpBuild Configuration: ' + JSON.stringify(config, null, 2));
   }
 
   await esbuild.build({
@@ -62,8 +64,8 @@ export async function build(option: ZBuildOptions) {
   });
 }
 
-export async function upbuild(option: ZBuildOptions) {
-  const { mode = 'build' } = option;
+export async function upbuild(option: UpBuildOptions) {
+  const { mode = 'build', logger = new ConsoleLogger() } = option;
 
   await handleExternalDependencies(option);
 
@@ -83,7 +85,7 @@ export async function upbuild(option: ZBuildOptions) {
 export const zBuildConfigSchema = z.object({
   dependencies: z.record(z.string()).optional(),
   devDependencies: z.record(z.string()).optional(),
-  zbuild: z.object({
+  upbuild: z.object({
     externalDependencies: z.record(z.string(), z.union([z.literal('external'), z.literal('install')])).optional(),
   }).optional(),
 });
@@ -102,7 +104,7 @@ function parseExternalDependencies(pkgData: unknown): ExternalDependency[] {
     ...(parsed.devDependencies ?? {}),
   };
 
-  const externalDeps = parsed.zbuild?.externalDependencies ?? {};
+  const externalDeps = parsed.upbuild?.externalDependencies ?? {};
   const installDeps: ExternalDependency[] = [];
 
   for (const [pkg, mode] of Object.entries(externalDeps)) {
@@ -123,12 +125,14 @@ async function writePackageJson({
   targetDir,
   outfile,
   outdir,
+  logger,
   verbose,
 }: {
   cwd: string;
   targetDir: string;
   outfile?: string;
   outdir?: string;
+  logger?: ILogger;
   verbose?: boolean;
 }) {
   const outputPath = outfile
@@ -147,7 +151,7 @@ async function writePackageJson({
   await fs.writeFile(newPkgPath, JSON.stringify(newPkg, null, 2));
 
   if (verbose) {
-    console.log(`📝 Created package.json at ${newPkgPath}`);
+    logger?.log(`📝 Created package.json at ${newPkgPath}`);
   }
 }
 
@@ -156,27 +160,29 @@ async function installPackages({
   cwd,
   targetDir,
   verbose,
+  logger,
 }: {
   deps: ExternalDependency[];
   cwd: string;
   targetDir: string;
   verbose?: boolean;
+  logger?: ILogger;
 }) {
   if (deps.length === 0) {
-    if (verbose) console.log('📦 No runtime dependencies to install.');
+    if (verbose) logger?.log('📦 No runtime dependencies to install.');
     return;
   }
 
-  console.log(`📦 Installing runtime dependencies...`);
+  logger?.log(`📦 Installing runtime dependencies...`);
   for (const { name, version } of deps) {
     const full = `${name}@${version}`;
-    console.log(`➡️  Installing ${full} in ${targetDir}`);
+    logger?.log(`➡️  Installing ${full} in ${targetDir}`);
     try {
       await execa('npm', ['install', full], {
         cwd: path.resolve(cwd, targetDir),
         stdio: verbose ? 'inherit' : 'pipe',
       });
-      console.log(`✅ Installed ${full}`);
+      logger?.log(`✅ Installed ${full}`);
     } catch (err) {
       console.error(`❌ Failed to install ${full}:`, err);
       throw err;
@@ -184,7 +190,7 @@ async function installPackages({
   }
 }
 
-export async function handleExternalDependencies(option: ZBuildOptions) {
+export async function handleExternalDependencies(option: UpBuildOptions) {
   const cwd = option.cwd ?? process.cwd();
   const targetDir = option.targetDir;
   if (!targetDir) return;
