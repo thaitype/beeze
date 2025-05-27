@@ -2,7 +2,7 @@
   "name": "upbuild",
   "version": "0.0.0",
   "type": "module",
-  "description": "minimal-typescript-node-esm-starter",
+  "description": "Build tool for tiny Node.js serverless functions and minimal Docker images.",
   "main": "./dist/main.cjs",
   "module": "./dist/main.js",
   "types": "./dist/main.d.ts",
@@ -14,7 +14,7 @@
     }
   },
   "bin": {
-    "zbuild": "bin.mjs"
+    "upbuild": "bin.mjs"
   },
   "scripts": {
     "start": "tsx src/main.ts",
@@ -26,6 +26,7 @@
     "format": "prettier -w src",
     "lint": "tsc --noEmit && eslint ./src && prettier -c src",
     "lint:fix": "eslint --fix ./src && prettier -w src",
+    "changeset": "changeset",
     "release": "npm run all && changeset publish",
     "all": "run-s lint test build",
     "upgrade-deps": "npx taze -r --interactive",
