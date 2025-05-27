@@ -1,5 +1,5 @@
 {
-  "name": "zbuild",
+  "name": "upbuild",
   "version": "0.0.0",
   "type": "module",
   "description": "minimal-typescript-node-esm-starter",
@@ -59,7 +59,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/thaitype/minimal-typescript-node-esm-starter.git"
+    "url": "https://github.com/thaitype/upbuild.git"
   },
-  "homepage": "https://github.com/thaitype/minimal-typescript-node-esm-starter"
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "homepage": "https://github.com/thaitype/upbuild"
 }
