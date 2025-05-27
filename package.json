@@ -1,6 +1,6 @@
 {
   "name": "upbuild",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "description": "Build tool for tiny Node.js serverless functions and minimal Docker images.",
   "main": "./dist/main.cjs",
