@@ -1,6 +1,7 @@
 {
-  "name": "@thaitype/minimal-typescript-node-esm-starter",
+  "name": "zbuild",
   "version": "0.0.0",
+  "type": "module",
   "description": "minimal-typescript-node-esm-starter",
   "main": "./dist/main.cjs",
   "module": "./dist/main.js",
@@ -11,6 +12,9 @@
       "import": "./dist/main.js",
       "default": "./dist/main.cjs"
     }
+  },
+  "bin": {
+    "zbuild": "bin.mjs"
   },
   "scripts": {
     "start": "tsx src/main.ts",
