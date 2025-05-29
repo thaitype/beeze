@@ -1,5 +1,11 @@
 # beeze
 
+## 0.0.2
+
+### Patch Changes
+
+- 3df306d: Rename package name upbuild to beeze
+
 ## 0.0.1
 
 ### Patch Changes
