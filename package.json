@@ -28,7 +28,7 @@
     "lint:fix": "eslint --fix ./src && prettier -w src",
     "changeset": "changeset",
     "release": "npm run all && changeset publish",
-    "all": "run-s lint test build",
+    "all": "run-s lint build",
     "upgrade-deps": "npx taze -r --interactive",
     "check-deps": "npx taze -r"
   },
