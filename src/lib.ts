@@ -5,7 +5,7 @@ import path from 'node:path';
 import fs from 'fs/promises';
 import z from 'zod';
 import { execa } from 'execa';
-import { ILogger, ConsoleLogger } from '@thaitype/core-utils'
+import { ILogger, ConsoleLogger } from '@thaitype/core-utils';
 
 export interface UpBuildOptions {
   esbuildOptions: esbuild.BuildOptions;
@@ -37,13 +37,11 @@ export async function watch(options: UpBuildOptions, buildCallback: () => Promis
   watcher.on('change', path => {
     options.logger?.log(`📄 File changed: ${path}`);
     buildCallback()
-      .then(
-        () => options.logger?.log('Build completed successfully.')
-      ).catch(err => {
+      .then(() => options.logger?.log('Build completed successfully.'))
+      .catch(err => {
         console.error('Error during build:', err);
       });
   });
-
 }
 
 export async function build(options: UpBuildOptions) {
@@ -71,25 +69,27 @@ export async function upbuild(option: UpBuildOptions) {
 
   if (mode === 'watch') {
     const watchDirectories = option.watchDirectories || ['src'];
-    await watch({
-      ...option,
-      watchDirectories,
-    }, () => build(option));
-  }
-  else {
+    await watch(
+      {
+        ...option,
+        watchDirectories,
+      },
+      () => build(option)
+    );
+  } else {
     await build(option);
   }
 }
 
-
 export const zBuildConfigSchema = z.object({
   dependencies: z.record(z.string()).optional(),
   devDependencies: z.record(z.string()).optional(),
-  upbuild: z.object({
-    externalDependencies: z.record(z.string(), z.union([z.literal('external'), z.literal('install')])).optional(),
-  }).optional(),
+  upbuild: z
+    .object({
+      externalDependencies: z.record(z.string(), z.union([z.literal('external'), z.literal('install')])).optional(),
+    })
+    .optional(),
 });
-
 
 interface ExternalDependency {
   name: string;
@@ -216,4 +216,3 @@ export async function handleExternalDependencies(option: UpBuildOptions) {
     verbose: option.verbose,
   });
 }
-

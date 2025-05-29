@@ -1,5 +1,5 @@
-import { PrettyLogger } from "@thaitype/core-utils";
-import { upbuild } from "./lib";
+import { PrettyLogger } from '@thaitype/core-utils';
+import { upbuild } from './lib';
 
 const mode = (process.argv[2] || 'watch') as 'watch' | 'build';
 if (mode !== 'watch' && mode !== 'build') {
