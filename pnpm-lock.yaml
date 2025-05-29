@@ -15,7 +15,7 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3
       esbuild:
-        specifier: '>=0.25.0 '
+        specifier: '>=0.25.0 <1.0.0'
         version: 0.25.5
       execa:
         specifier: ^8.0.1
