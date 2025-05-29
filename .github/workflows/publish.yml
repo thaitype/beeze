@@ -24,7 +24,7 @@ jobs:
           cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run all
+      - run: pnpm run build
       
       - name: Create Release Pull Request or Publish
         id: changesets

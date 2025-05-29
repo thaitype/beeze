@@ -1,80 +1,36 @@
 {
-  "name": "beeze",
-  "version": "0.0.2",
-  "type": "module",
-  "description": "Build tool for tiny Node.js serverless functions and minimal Docker images.",
-  "main": "./dist/main.cjs",
-  "module": "./dist/main.js",
-  "types": "./dist/main.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/main.js",
-      "default": "./dist/main.cjs"
-    }
-  },
-  "bin": {
-    "beeze": "bin.mjs"
-  },
+  "name": "@beezejs/root",
+  "private": true,
   "scripts": {
-    "start": "tsx src/main.ts",
-    "dev": "tsx watch src/main.ts",
-    "test:coverage": "vitest run --coverage",
-    "test": "vitest",
-    "test:ci": "vitest run",
-    "build": "tsup src/main.ts --dts --format esm,cjs",
-    "format": "prettier -w src",
-    "lint": "tsc --noEmit && eslint ./src && prettier -c src",
-    "lint:fix": "eslint --fix ./src && prettier -w src",
-    "changeset": "changeset",
-    "release": "npm run all && changeset publish",
-    "all": "run-s lint build",
+    "prepare": "turbo build @beezejs/vitest-config#build",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo lint:check check-types && npm run format",
+    "lint:fix": "turbo lint:fix && npm run format:fix",
+    "format": "prettier --check ./**/*.{ts,js}",
+    "format:fix": "prettier --write ./**/*.{ts,js}",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:coverage-report": "turbo run view-report",
     "upgrade-deps": "npx taze -r --interactive",
     "check-deps": "npx taze -r"
   },
-  "peerDependencies": {
-    "esbuild": ">=0.25.0 <1.0.0"
-  },
   "devDependencies": {
-    "@changesets/cli": "^2.29.4",
-    "@eslint/js": "^9.27.0",
-    "@types/node": "^22.15.21",
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "@vitest/coverage-v8": "^3.1.4",
-    "eslint": "^9.27.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-only-warn": "^1.1.0",
-    "npm-run-all2": "^8.0.4",
     "prettier": "^3.5.3",
-    "tsup": "^8.5.0",
-    "tsx": "^4.19.4",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1",
-    "vitest": "^3.1.4"
+    "turbo": "^2.5.3",
+    "typescript": "5.8.2"
   },
-  "keywords": [],
-  "author": "Thada Wangthammang",
-  "license": "MIT",
-  "files": [
-    "bin.mjs",
-    "dist",
-    "src",
-    "package.json",
-    "README.md"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/thaitype/beeze.git"
+  "packageManager": "pnpm@10.11.0",
+  "engines": {
+    "node": ">=20"
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
-  "homepage": "https://github.com/thaitype/beeze",
-  "dependencies": {
-    "@thaitype/core-utils": "^1.1.1",
-    "chokidar": "^4.0.3",
-    "execa": "^8.0.1",
-    "zod": "^3.25.30"
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "printWidth": 120,
+    "arrowParens": "avoid"
   }
 }
