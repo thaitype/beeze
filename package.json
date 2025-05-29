@@ -1,5 +1,5 @@
 {
-  "name": "upbuild",
+  "name": "beeze",
   "version": "0.0.1",
   "type": "module",
   "description": "Build tool for tiny Node.js serverless functions and minimal Docker images.",
@@ -14,7 +14,7 @@
     }
   },
   "bin": {
-    "upbuild": "bin.mjs"
+    "beeze": "bin.mjs"
   },
   "scripts": {
     "start": "tsx src/main.ts",
@@ -64,13 +64,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/thaitype/upbuild.git"
+    "url": "https://github.com/thaitype/beeze.git"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "homepage": "https://github.com/thaitype/upbuild",
+  "homepage": "https://github.com/thaitype/beeze",
   "dependencies": {
     "@thaitype/core-utils": "^1.1.1",
     "chokidar": "^4.0.3",
