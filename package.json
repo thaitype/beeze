@@ -1,6 +1,6 @@
 {
   "name": "beeze",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "Build tool for tiny Node.js serverless functions and minimal Docker images.",
   "main": "./dist/main.cjs",
