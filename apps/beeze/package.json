@@ -22,7 +22,9 @@
     "test:coverage": "vitest run --coverage",
     "test": "vitest",
     "test:ci": "vitest run",
-    "build": "tsup src/main.ts --dts --format esm,cjs",
+    "build:cli": "tsup src/cli.ts --format esm",
+    "build:lib": "tsup src/index.ts --dts --format esm,cjs",
+    "build": "run-p build:cli build:lib",
     "format": "prettier -w src",
     "lint": "tsc --noEmit && eslint ./src && prettier -c src",
     "lint:fix": "eslint --fix ./src && prettier -w src",
@@ -68,11 +70,12 @@
   "homepage": "https://github.com/thaitype/beeze",
   "dependencies": {
     "@thaitype/core-utils": "^1.1.1",
+    "ansis": "^4.1.0",
     "chokidar": "^4.0.3",
     "execa": "^8.0.1",
-    "zod": "^3.25.30",
     "lodash-es": "^4.17.21",
     "unconfig": "^7.3.1",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "zod": "^3.25.30"
   }
 }

@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-await import('./dist/main.js')
+await import('./dist/cli.js')
