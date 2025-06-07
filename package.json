@@ -2,7 +2,7 @@
   "name": "@beezejs/root",
   "private": true,
   "scripts": {
-    "prepare": "turbo build @beezejs/vitest-config#build",
+    "prepare": "turbo run @beezejs/vitest-config#build",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo lint:check check-types && npm run format",

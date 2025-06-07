@@ -71,6 +71,7 @@
   },
   "homepage": "https://github.com/thaitype/beeze",
   "dependencies": {
+    "@drizzle-team/brocli": "^0.11.0",
     "@thaitype/core-utils": "^1.1.1",
     "ansis": "^4.1.0",
     "chokidar": "^4.0.3",

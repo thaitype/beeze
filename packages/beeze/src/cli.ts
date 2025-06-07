@@ -12,10 +12,19 @@ if (!config) {
 
 console.log('Configuration loaded:', config);
 
-// const mode = (process.argv[2] || 'watch') as 'watch' | 'build';
-// if (mode !== 'watch' && mode !== 'build') {
-//   throw new Error('Invalid mode. Use "watch" or "build".');
-// }
+import { run, command, positional } from "@drizzle-team/brocli";
+
+const echo = command({
+  name: "echo",
+  options: {
+    text: positional().desc("Text to echo").default("echo"),
+  },
+  handler: (opts) => {
+    console.log(opts.text);
+  },
+});
+
+run([echo])
 
 // const logger = new PrettyLogger();
 
