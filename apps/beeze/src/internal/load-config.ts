@@ -1,4 +1,5 @@
 import { loadConfig } from 'unconfig';
+import path from 'node:path';
 import { MARK_CHECK } from './constant.js';
 import c from 'ansis';
 import type { GlobalConfigOptions } from './types.js';
@@ -34,12 +35,15 @@ export async function getConfig(
     merge: false,
   });
   // Check if source from package.json exists
-  if (result.sources.some(source => source === 'package')) {
+  if (result.sources.some(source => path.basename(source) === 'package.json')) {
     const packageJson = result.config as { beeze: BeezeConfig } | undefined;
     logger.log(c.green`${MARK_CHECK} Config loaded from package.json`);
     if (packageJson && packageJson.beeze) {
       logger.log(c.green`${MARK_CHECK} Config loaded from package.json field 'beeze'`);
       return packageJson.beeze;
+    } else {
+      logger.warn(c.yellow`No 'beeze' field found in package.json`);
+      return undefined;
     }
   }
   if (result.sources.length) logger.log(c.green`${MARK_CHECK} Config loaded from ${result.sources.join(', ')}`);

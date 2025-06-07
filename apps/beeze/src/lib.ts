@@ -1,4 +1,4 @@
-// upbuild v0.0.1
+// beeze v0.0.1
 import esbuild from 'esbuild';
 import chokidar from 'chokidar';
 import path from 'node:path';
@@ -7,7 +7,7 @@ import z from 'zod';
 import { execa } from 'execa';
 import { ILogger, ConsoleLogger } from '@thaitype/core-utils';
 
-export interface UpBuildOptions {
+export interface beezeOptions {
   esbuildOptions: esbuild.BuildOptions;
   cwd?: string;
   mode?: 'watch' | 'build';
@@ -26,7 +26,7 @@ const defaultOptions: esbuild.BuildOptions = {
   target: ['node22'],
 };
 
-export async function watch(options: UpBuildOptions, buildCallback: () => Promise<void>) {
+export async function watch(options: beezeOptions, buildCallback: () => Promise<void>) {
   if (!options.watchDirectories || options.watchDirectories.length === 0) {
     throw new Error('No directories specified to watch.');
   }
@@ -44,7 +44,7 @@ export async function watch(options: UpBuildOptions, buildCallback: () => Promis
   });
 }
 
-export async function build(options: UpBuildOptions) {
+export async function build(options: beezeOptions) {
   const { verbose, cwd = process.cwd() } = options;
 
   // Build configuration
@@ -54,7 +54,7 @@ export async function build(options: UpBuildOptions) {
   };
 
   if (verbose) {
-    options.logger?.log('UpBuild Configuration: ' + JSON.stringify(config, null, 2));
+    options.logger?.log('beeze Configuration: ' + JSON.stringify(config, null, 2));
   }
 
   await esbuild.build({
@@ -62,7 +62,7 @@ export async function build(options: UpBuildOptions) {
   });
 }
 
-export async function upbuild(option: UpBuildOptions) {
+export async function beeze(option: beezeOptions) {
   const { mode = 'build', logger = new ConsoleLogger() } = option;
 
   await handleExternalDependencies(option);
@@ -84,7 +84,7 @@ export async function upbuild(option: UpBuildOptions) {
 export const zBuildConfigSchema = z.object({
   dependencies: z.record(z.string()).optional(),
   devDependencies: z.record(z.string()).optional(),
-  upbuild: z
+  beeze: z
     .object({
       externalDependencies: z.record(z.string(), z.union([z.literal('external'), z.literal('install')])).optional(),
     })
@@ -104,7 +104,7 @@ function parseExternalDependencies(pkgData: unknown): ExternalDependency[] {
     ...(parsed.devDependencies ?? {}),
   };
 
-  const externalDeps = parsed.upbuild?.externalDependencies ?? {};
+  const externalDeps = parsed.beeze?.externalDependencies ?? {};
   const installDeps: ExternalDependency[] = [];
 
   for (const [pkg, mode] of Object.entries(externalDeps)) {
@@ -190,7 +190,7 @@ async function installPackages({
   }
 }
 
-export async function handleExternalDependencies(option: UpBuildOptions) {
+export async function handleExternalDependencies(option: beezeOptions) {
   const cwd = option.cwd ?? process.cwd();
   const targetDir = option.targetDir;
   if (!targetDir) return;

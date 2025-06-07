@@ -1,7 +1,16 @@
 import { PrettyLogger } from '@thaitype/core-utils';
-import { upbuild } from './lib';
+import { beeze } from './lib';
+import { getConfig } from './internal/load-config';
 
-console.log('Starting upbuild process...');
+console.log('Starting beeze process...');
+
+const config = await getConfig({
+}, new PrettyLogger(),);
+if (!config) {
+  throw new Error('Configuration not found. Please ensure beeze.config.js or package.json is set up correctly.');
+}
+
+console.log('Configuration loaded:', config);
 
 // const mode = (process.argv[2] || 'watch') as 'watch' | 'build';
 // if (mode !== 'watch' && mode !== 'build') {
@@ -10,7 +19,7 @@ console.log('Starting upbuild process...');
 
 // const logger = new PrettyLogger();
 
-// upbuild({
+// beeze({
 //   esbuildOptions: {
 //     entryPoints: ['server/main.ts'],
 //     outfile: 'functions/dist/main.js',

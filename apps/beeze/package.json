@@ -17,13 +17,14 @@
     "beeze": "bin.mjs"
   },
   "scripts": {
-    "start": "tsx src/main.ts",
-    "dev": "tsx watch src/main.ts",
     "test:coverage": "vitest run --coverage",
     "test": "vitest",
     "test:ci": "vitest run",
+    "dev": "run-p build:cli:watch build:lib:watch",
     "build:cli": "tsup src/cli.ts --format esm",
-    "build:lib": "tsup src/index.ts --dts --format esm,cjs",
+    "build:cli:watch": "tsup src/cli.ts --format esm --watch",
+    "build:lib": "tsup src/main.ts --dts --format esm,cjs",
+    "build:lib:watch": "tsup src/main.ts --dts --format esm,cjs --watch",
     "build": "run-p build:cli build:lib",
     "format": "prettier -w src",
     "lint": "tsc --noEmit && eslint ./src && prettier -c src",
