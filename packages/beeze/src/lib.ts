@@ -81,14 +81,15 @@ export async function beeze(option: beezeOptions) {
   }
 }
 
-export const zBuildConfigSchema = z.object({
+export const beezeConfigSchema = z
+  .object({
+    externalDependencies: z.record(z.string(), z.union([z.literal('external'), z.literal('install')])).optional(),
+  });
+
+export const packageJsonConfigSchema = z.object({
   dependencies: z.record(z.string()).optional(),
   devDependencies: z.record(z.string()).optional(),
-  beeze: z
-    .object({
-      externalDependencies: z.record(z.string(), z.union([z.literal('external'), z.literal('install')])).optional(),
-    })
-    .optional(),
+  beeze: beezeConfigSchema.optional(),
 });
 
 interface ExternalDependency {
@@ -97,7 +98,7 @@ interface ExternalDependency {
 }
 
 function parseExternalDependencies(pkgData: unknown): ExternalDependency[] {
-  const parsed = zBuildConfigSchema.parse(pkgData);
+  const parsed = packageJsonConfigSchema.parse(pkgData);
 
   const dependencies = {
     ...(parsed.dependencies ?? {}),
