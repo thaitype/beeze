@@ -144,6 +144,33 @@ importers:
         specifier: ^3.1.4
         version: 3.1.4(@types/node@22.15.21)(@vitest/ui@3.0.8)(jiti@2.4.2)(jsdom@26.1.0)(tsx@4.19.4)
 
+  examples/basic:
+    devDependencies:
+      '@beezejs/eslint-config':
+        specifier: workspace:*
+        version: link:../../configs/eslint-config
+      '@beezejs/typescript-config':
+        specifier: workspace:*
+        version: link:../../configs/typescript-config
+      '@beezejs/vitest-config':
+        specifier: workspace:*
+        version: link:../../configs/vitest-config
+      '@vitest/coverage-istanbul':
+        specifier: ^3.1.4
+        version: 3.1.4(vitest@3.1.4(@types/node@22.15.21)(jiti@2.4.2)(jsdom@26.1.0)(tsx@4.19.4))
+      beeze:
+        specifier: workspace:*
+        version: link:../../apps/beeze
+      eslint:
+        specifier: ^9.27.0
+        version: 9.27.0(jiti@2.4.2)
+      prettier:
+        specifier: ^3.5.3
+        version: 3.5.3
+      vitest:
+        specifier: ^3.1.4
+        version: 3.1.4(@types/node@22.15.21)(@vitest/ui@3.0.8)(jiti@2.4.2)(jsdom@26.1.0)(tsx@4.19.4)
+
   packages/shared:
     devDependencies:
       '@beezejs/eslint-config':
