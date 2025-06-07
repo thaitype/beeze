@@ -14,7 +14,7 @@ export interface GlobalConfigOptions {
    * Config file name to load.
    * If not specified, the default config file name will be used.
    *
-   * @default 'kubricate.config'
+   * @default 'beeze.config'
    */
   config?: string;
 
