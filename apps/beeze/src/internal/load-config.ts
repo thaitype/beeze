@@ -33,6 +33,15 @@ export async function getConfig(
     ],
     merge: false,
   });
+  // Check if source from package.json exists
+  if (result.sources.some(source => source === 'package')) {
+    const packageJson = result.config as { beeze: BeezeConfig } | undefined;
+    logger.log(c.green`${MARK_CHECK} Config loaded from package.json`);
+    if (packageJson && packageJson.beeze) {
+      logger.log(c.green`${MARK_CHECK} Config loaded from package.json field 'beeze'`);
+      return packageJson.beeze;
+    }
+  }
   if (result.sources.length) logger.log(c.green`${MARK_CHECK} Config loaded from ${result.sources.join(', ')}`);
   return result.config;
 }
