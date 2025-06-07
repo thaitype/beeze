@@ -40,6 +40,7 @@
     "@beezejs/eslint-config": "workspace:*",
     "@beezejs/typescript-config": "workspace:*",
     "@changesets/cli": "^2.29.4",
+    "@type-challenges/utils": "^0.1.1",
     "@types/node": "^22.15.21",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@vitest/coverage-v8": "^3.1.4",

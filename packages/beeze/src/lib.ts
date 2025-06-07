@@ -6,6 +6,7 @@ import fs from 'fs/promises';
 import z from 'zod';
 import { execa } from 'execa';
 import { ILogger, ConsoleLogger } from '@thaitype/core-utils';
+import { beezeConfigSchema } from './BeezeConfig';
 
 export interface beezeOptions {
   esbuildOptions: esbuild.BuildOptions;
@@ -81,10 +82,6 @@ export async function beeze(option: beezeOptions) {
   }
 }
 
-export const beezeConfigSchema = z
-  .object({
-    externalDependencies: z.record(z.string(), z.union([z.literal('external'), z.literal('install')])).optional(),
-  });
 
 export const packageJsonConfigSchema = z.object({
   dependencies: z.record(z.string()).optional(),

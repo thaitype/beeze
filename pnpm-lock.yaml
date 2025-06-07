@@ -143,6 +143,9 @@ importers:
       '@changesets/cli':
         specifier: ^2.29.4
         version: 2.29.4
+      '@type-challenges/utils':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@types/node':
         specifier: ^22.15.21
         version: 22.15.21
@@ -733,6 +736,9 @@ packages:
     resolution: {integrity: sha512-blFfHt48iYy9tOql6LMap7rm6NTBBMG2x4AEeMCFeRgex4WZy15hLJPOyy/5i0NFewWA5m/DZTCA7Y4NLs6VYw==}
     peerDependencies:
       typescript: ^5.7.2
+
+  '@type-challenges/utils@0.1.1':
+    resolution: {integrity: sha512-A7ljYfBM+FLw+NDyuYvGBJiCEV9c0lPWEAdzfOAkb3JFqfLl0Iv/WhWMMARHiRKlmmiD1g8gz/507yVvHdQUYA==}
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
@@ -3472,6 +3478,8 @@ snapshots:
       ansis: 4.1.0
       lodash-es: 4.17.21
       typescript: 5.8.3
+
+  '@type-challenges/utils@0.1.1': {}
 
   '@types/estree@1.0.6': {}
 
