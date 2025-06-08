@@ -1,5 +1,4 @@
-
-import { ILogger } from '@thaitype/core-utils';
+import type { ILogger } from '@thaitype/core-utils';
 import { getMatchConfigFile } from './load-config.js';
 
 export function getClassName(obj: unknown): string {

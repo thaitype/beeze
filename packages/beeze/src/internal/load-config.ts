@@ -3,8 +3,8 @@ import path from 'node:path';
 import { MARK_CHECK } from './constant.js';
 import c from 'ansis';
 import type { GlobalConfigOptions } from './types.js';
-import { ILogger, NoopLogger } from '@thaitype/core-utils';
-import { BeezeConfig } from '../BeezeConfig.js';
+import { type ILogger, NoopLogger } from '@thaitype/core-utils';
+import type { BeezeConfig } from '../config.js';
 
 export const DEFAULT_CONFIG_NAME = 'beeze.config';
 // Allow all JS/TS file extensions except JSON
@@ -30,7 +30,7 @@ export async function getConfig(
         // Load JSON config file if it exists, read from field 'beeze' in package.json
         files: 'package',
         extensions: ['json'],
-      }
+      },
     ],
     merge: false,
   });

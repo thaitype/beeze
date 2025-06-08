@@ -1,16 +1,17 @@
 {
   "name": "beeze",
   "version": "0.0.2",
-  "type": "module",
   "description": "Build tool for tiny Node.js serverless functions and minimal Docker images.",
-  "main": "./dist/main.cjs",
-  "module": "./dist/main.js",
-  "types": "./dist/main.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/dts/index.d.ts",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/main.js",
-      "default": "./dist/main.cjs"
+      "types": "./dist/dts/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/cjs/index.js"
     }
   },
   "bin": {
@@ -20,12 +21,11 @@
     "test:coverage": "vitest run --coverage",
     "test": "vitest",
     "test:ci": "vitest run",
-    "dev": "run-p build:cli:watch build:lib:watch",
-    "build:cli": "tsup src/cli.ts --format esm",
-    "build:cli:watch": "tsup src/cli.ts --format esm --watch",
-    "build:lib": "tsup src/main.ts --dts --format esm,cjs",
-    "build:lib:watch": "tsup src/main.ts --dts --format esm,cjs --watch",
-    "build": "run-p build:cli build:lib",
+    "dev": "tsc",
+    "build": "run-s format build-esm build-cjs build-annotate",
+    "build-esm": "tsc",
+    "build-cjs": "babel dist/esm --plugins @babel/transform-export-namespace-from --plugins @babel/transform-modules-commonjs --out-dir dist/cjs --source-maps",
+    "build-annotate": "babel dist --plugins annotate-pure-calls --out-dir dist --source-maps",
     "format": "prettier -w src",
     "lint": "tsc --noEmit && eslint ./src && prettier -c src",
     "lint:fix": "eslint --fix ./src && prettier -w src",
@@ -37,6 +37,11 @@
     "esbuild": ">=0.25.0 <1.0.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.24.5",
+    "@babel/core": "^7.24.5",
+    "@babel/plugin-transform-export-namespace-from": "^7.24.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.24.1",
+    "babel-plugin-annotate-pure-calls": "^0.4.0",
     "@beezejs/eslint-config": "workspace:*",
     "@beezejs/typescript-config": "workspace:*",
     "@changesets/cli": "^2.29.4",
@@ -47,8 +52,6 @@
     "eslint": "^9.27.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.5.3",
-    "tsup": "^8.5.0",
-    "tsx": "^4.19.4",
     "vitest": "^3.1.4"
   },
   "keywords": [],

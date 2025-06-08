@@ -1,6 +1,6 @@
 import { PrettyLogger } from '@thaitype/core-utils';
-import { run, command, boolean, type TypeOf, string } from "@drizzle-team/brocli";
-import { version } from './version';
+import { run, command, boolean, type TypeOf, string } from '@drizzle-team/brocli';
+import { version } from './version.js';
 
 const logger = new PrettyLogger();
 // console.log('Starting beeze process...');
@@ -15,23 +15,20 @@ const logger = new PrettyLogger();
 
 // --- Shared Options ---
 const sharedOptions = {
-  watch: boolean("watch")
-    .alias("w")
-    .desc("Enable watch mode (dev only)")
-    .default(false),
+  watch: boolean('watch').alias('w').desc('Enable watch mode (dev only)').default(false),
 };
 
 // --- Dev Command ---
 const dev = command({
-  name: "dev",
-  desc: "Run in development mode (with optional --watch)",
+  name: 'dev',
+  desc: 'Run in development mode (with optional --watch)',
   options: sharedOptions,
   handler: (opts: TypeOf<typeof sharedOptions>) => {
-    console.log("[beeze] dev mode");
+    console.log('[beeze] dev mode');
     if (opts.watch) {
-      console.log("Watching for changes...");
+      console.log('Watching for changes...');
     } else {
-      console.log("Building once in dev mode...");
+      console.log('Building once in dev mode...');
     }
     // todo: invoke your dev build logic here
   },
@@ -39,24 +36,22 @@ const dev = command({
 
 // --- Build Command ---
 const build = command({
-  name: "build",
-  desc: "Run a production build (minify, optimized)",
+  name: 'build',
+  desc: 'Run a production build (minify, optimized)',
   options: {},
   handler: () => {
-    console.log("[beeze] building for production...");
+    console.log('[beeze] building for production...');
     // todo: invoke your production build logic here
   },
 });
 
 // --- Run CLI ---
 run([dev, build], {
-  name: "beeze",
-  description: "🐝 Tiny builds that fly — Build tool for serverless functions and Docker images.",
+  name: 'beeze',
+  description: '🐝 Tiny builds that fly — Build tool for serverless functions and Docker images.',
   version,
   globals: {
-    root: string('root')
-      .desc('Set project root directory')
-      .default(process.cwd()),
+    root: string('root').desc('Set project root directory').default(process.cwd()),
   },
   hook: (event, command, globals) => {
     if (event === 'before') {
@@ -65,7 +60,6 @@ run([dev, build], {
     }
   },
 });
-
 
 // const logger = new PrettyLogger();
 

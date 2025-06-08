@@ -1,7 +1,8 @@
 {
-  "extends": "@beezejs/typescript-config/bundler.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": [
-    "node_modules"
-  ]
+  "extends": "@beezejs/typescript-config/dual.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "declarationDir": "dist/dts",
+  },
+  "exclude": ["node_modules", "*.config.ts", "dist"]
 }

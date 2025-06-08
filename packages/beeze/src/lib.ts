@@ -4,19 +4,20 @@ import path from 'node:path';
 import fs from 'fs/promises';
 import z from 'zod';
 import { execa } from 'execa';
-import { ILogger, ConsoleLogger } from '@thaitype/core-utils';
-import { BeezeConfig, beezeConfigSchema } from './BeezeConfig';
+import { type ILogger, ConsoleLogger } from '@thaitype/core-utils';
+import { beezeConfigSchema } from './BeezeConfig.js';
+import type { BeezeConfig } from './config.js';
 
-export interface BeezeGlobalConfig extends BeezeConfig, StartBeezeOptions { }
+export interface BeezeGlobalConfig extends BeezeConfig, StartBeezeOptions {}
 
 export interface StartBeezeOptions {
-  // esbuildOptions: esbuild.BuildOptions;
+  esbuildOptions: esbuild.BuildOptions;
   root?: string;
   mode?: 'dev' | 'build';
   watch?: boolean;
   verbose?: boolean;
-  // targetDir?: string;
-  // watchDirectories?: string[];
+  targetDir?: string;
+  watchDirectories?: string[];
   logger?: ILogger;
 }
 
@@ -33,7 +34,7 @@ export async function watch(options: StartBeezeOptions, buildCallback: () => Pro
   if (!options.watchDirectories || options.watchDirectories.length === 0) {
     throw new Error('No directories specified to watch.');
   }
-  const watchPaths = options.watchDirectories.map(dir => path.join(options.cwd ?? '', dir));
+  const watchPaths = options.watchDirectories.map(dir => path.join(options.root ?? '', dir));
   options.logger?.log(`Watching directories: ${watchPaths.join(', ')}`);
   const watcher = chokidar.watch(watchPaths);
 
@@ -48,7 +49,7 @@ export async function watch(options: StartBeezeOptions, buildCallback: () => Pro
 }
 
 export async function build(options: StartBeezeOptions) {
-  const { verbose, cwd = process.cwd() } = options;
+  const { verbose } = options;
 
   // Build configuration
   const config: esbuild.BuildOptions = {
@@ -197,7 +198,6 @@ export async function handleExternalDependencies(option: BeezeGlobalConfig) {
   });
 }
 
-
 export async function startBeeze(option: StartBeezeOptions) {
   const { mode = 'build', logger = new ConsoleLogger() } = option;
 
@@ -221,8 +221,7 @@ export async function startBeeze(option: StartBeezeOptions) {
         },
         () => build(option)
       );
-    }
-    else {
+    } else {
       logger.log('Running in development mode');
       await build(option);
     }

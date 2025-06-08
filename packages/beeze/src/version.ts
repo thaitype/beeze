@@ -15,4 +15,4 @@ function getPackageVersion(packageJsonPath: string) {
   return version;
 }
 
-export const version = getPackageVersion('../package.json');
+export const version = getPackageVersion('../../package.json');

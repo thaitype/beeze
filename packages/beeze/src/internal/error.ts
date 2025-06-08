@@ -1,4 +1,4 @@
-import { ILogger, ConsoleLogger} from '@thaitype/core-utils';
+import { type ILogger, ConsoleLogger } from '@thaitype/core-utils';
 
 export function handlerError(error: unknown, logger: ILogger | undefined, exitCode = 3): void {
   if (logger === undefined) {
