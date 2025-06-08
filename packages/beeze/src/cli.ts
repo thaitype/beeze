@@ -1,6 +1,7 @@
 import { PrettyLogger } from '@thaitype/core-utils';
 import { run, command, boolean, type TypeOf, positional, string } from "@drizzle-team/brocli";
 import { getConfig } from './internal/load-config';
+import { version } from './version';
 
 // console.log('Starting beeze process...');
 
@@ -65,27 +66,11 @@ const build = command({
   },
 });
 
-// --- Default (no command = dev) ---
-const defaultDev = command({
-  name: "_", // will match if no command is passed
-  desc: "Default command (dev mode)",
-  options: sharedOptions,
-  handler: (opts: TypeOf<typeof sharedOptions>) => {
-    console.log("[beeze] default dev mode");
-    if (opts.watch) {
-      console.log("Watching for changes...");
-    } else {
-      console.log("Building once in dev mode...");
-    }
-    // todo: invoke your dev build logic here
-  },
-});
-
 // --- Run CLI ---
-run([dev, build, defaultDev], {
+run([dev, build], {
   name: "beeze",
   description: "🐝 Tiny builds that fly — Build tool for serverless functions and Docker images.",
-  version: "0.0.1",
+  version,
   globals: {
     root: string('root')
       .desc('Set project root directory')
@@ -96,7 +81,7 @@ run([dev, build, defaultDev], {
       process.chdir(globals.root);
       console.log(`[beeze] Root directory set to: ${globals.root}`);
     }
-  }
+  },
 });
 
 

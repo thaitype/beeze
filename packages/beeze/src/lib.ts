@@ -1,4 +1,3 @@
-// beeze v0.0.1
 import esbuild from 'esbuild';
 import chokidar from 'chokidar';
 import path from 'node:path';
@@ -8,7 +7,7 @@ import { execa } from 'execa';
 import { ILogger, ConsoleLogger } from '@thaitype/core-utils';
 import { beezeConfigSchema } from './BeezeConfig';
 
-export interface beezeOptions {
+export interface BeezeOptions {
   esbuildOptions: esbuild.BuildOptions;
   cwd?: string;
   mode?: 'watch' | 'build';
@@ -27,7 +26,7 @@ const defaultOptions: esbuild.BuildOptions = {
   target: ['node22'],
 };
 
-export async function watch(options: beezeOptions, buildCallback: () => Promise<void>) {
+export async function watch(options: BeezeOptions, buildCallback: () => Promise<void>) {
   if (!options.watchDirectories || options.watchDirectories.length === 0) {
     throw new Error('No directories specified to watch.');
   }
@@ -45,7 +44,7 @@ export async function watch(options: beezeOptions, buildCallback: () => Promise<
   });
 }
 
-export async function build(options: beezeOptions) {
+export async function build(options: BeezeOptions) {
   const { verbose, cwd = process.cwd() } = options;
 
   // Build configuration
@@ -63,7 +62,7 @@ export async function build(options: beezeOptions) {
   });
 }
 
-export async function beeze(option: beezeOptions) {
+export async function beeze(option: BeezeOptions) {
   const { mode = 'build', logger = new ConsoleLogger() } = option;
 
   await handleExternalDependencies(option);
@@ -188,7 +187,7 @@ async function installPackages({
   }
 }
 
-export async function handleExternalDependencies(option: beezeOptions) {
+export async function handleExternalDependencies(option: BeezeOptions) {
   const cwd = option.cwd ?? process.cwd();
   const targetDir = option.targetDir;
   if (!targetDir) return;
