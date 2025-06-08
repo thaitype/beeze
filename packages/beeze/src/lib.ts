@@ -5,15 +5,18 @@ import fs from 'fs/promises';
 import z from 'zod';
 import { execa } from 'execa';
 import { ILogger, ConsoleLogger } from '@thaitype/core-utils';
-import { beezeConfigSchema } from './BeezeConfig';
+import { BeezeConfig, beezeConfigSchema } from './BeezeConfig';
 
-export interface BeezeOptions {
-  esbuildOptions: esbuild.BuildOptions;
-  cwd?: string;
-  mode?: 'watch' | 'build';
+export interface BeezeGlobalConfig extends BeezeConfig, StartBeezeOptions { }
+
+export interface StartBeezeOptions {
+  // esbuildOptions: esbuild.BuildOptions;
+  root?: string;
+  mode?: 'dev' | 'build';
+  watch?: boolean;
   verbose?: boolean;
-  targetDir?: string;
-  watchDirectories?: string[];
+  // targetDir?: string;
+  // watchDirectories?: string[];
   logger?: ILogger;
 }
 
@@ -26,7 +29,7 @@ const defaultOptions: esbuild.BuildOptions = {
   target: ['node22'],
 };
 
-export async function watch(options: BeezeOptions, buildCallback: () => Promise<void>) {
+export async function watch(options: StartBeezeOptions, buildCallback: () => Promise<void>) {
   if (!options.watchDirectories || options.watchDirectories.length === 0) {
     throw new Error('No directories specified to watch.');
   }
@@ -44,7 +47,7 @@ export async function watch(options: BeezeOptions, buildCallback: () => Promise<
   });
 }
 
-export async function build(options: BeezeOptions) {
+export async function build(options: StartBeezeOptions) {
   const { verbose, cwd = process.cwd() } = options;
 
   // Build configuration
@@ -61,26 +64,6 @@ export async function build(options: BeezeOptions) {
     ...config,
   });
 }
-
-export async function beeze(option: BeezeOptions) {
-  const { mode = 'build', logger = new ConsoleLogger() } = option;
-
-  await handleExternalDependencies(option);
-
-  if (mode === 'watch') {
-    const watchDirectories = option.watchDirectories || ['src'];
-    await watch(
-      {
-        ...option,
-        watchDirectories,
-      },
-      () => build(option)
-    );
-  } else {
-    await build(option);
-  }
-}
-
 
 export const packageJsonConfigSchema = z.object({
   dependencies: z.record(z.string()).optional(),
@@ -187,8 +170,8 @@ async function installPackages({
   }
 }
 
-export async function handleExternalDependencies(option: BeezeOptions) {
-  const cwd = option.cwd ?? process.cwd();
+export async function handleExternalDependencies(option: BeezeGlobalConfig) {
+  const cwd = option.root ?? process.cwd();
   const targetDir = option.targetDir;
   if (!targetDir) return;
 
@@ -201,8 +184,8 @@ export async function handleExternalDependencies(option: BeezeOptions) {
   await writePackageJson({
     cwd,
     targetDir,
-    outfile: option.esbuildOptions.outfile,
-    outdir: option.esbuildOptions.outdir,
+    outfile: option.outfile,
+    outdir: option.outdir,
     verbose: option.verbose,
   });
 
@@ -212,4 +195,41 @@ export async function handleExternalDependencies(option: BeezeOptions) {
     targetDir,
     verbose: option.verbose,
   });
+}
+
+
+export async function startBeeze(option: StartBeezeOptions) {
+  const { mode = 'build', logger = new ConsoleLogger() } = option;
+
+  // const config = await getConfig({
+  // }, new PrettyLogger(),);
+  // if (!config) {
+  //   throw new Error('Configuration not found. Please ensure beeze.config.js or package.json is set up correctly.');
+  // }
+
+  // console.log('Configuration loaded:', config);
+
+  await handleExternalDependencies(option);
+
+  if (mode === 'dev') {
+    if (option.watch) {
+      const watchDirectories = option.watchDirectories || ['src'];
+      await watch(
+        {
+          ...option,
+          watchDirectories,
+        },
+        () => build(option)
+      );
+    }
+    else {
+      logger.log('Running in development mode');
+      await build(option);
+    }
+  } else {
+    if (option.watch) {
+      logger.warn('Watch mode is not supported in build mode. Running a single build.');
+    }
+    await build(option);
+  }
 }

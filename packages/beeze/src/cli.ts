@@ -1,8 +1,8 @@
 import { PrettyLogger } from '@thaitype/core-utils';
-import { run, command, boolean, type TypeOf, positional, string } from "@drizzle-team/brocli";
-import { getConfig } from './internal/load-config';
+import { run, command, boolean, type TypeOf, string } from "@drizzle-team/brocli";
 import { version } from './version';
 
+const logger = new PrettyLogger();
 // console.log('Starting beeze process...');
 
 // const config = await getConfig({
@@ -12,24 +12,6 @@ import { version } from './version';
 // }
 
 // console.log('Configuration loaded:', config);
-
-// const echo = command({
-//   name: "echo",
-//   options: {
-//     text: positional().desc("Text to echo").default("echo"),
-//   },
-//   handler: (opts) => {
-//     console.log(opts.text);
-//   },
-// });
-
-// run([echo], {
-//   name: "beeze",
-//   description: "Build tool for tiny Node.js serverless functions and minimal Docker images.",
-//   globals: {},
-//   version: "0.1.0",
-// })
-
 
 // --- Shared Options ---
 const sharedOptions = {
