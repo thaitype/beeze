@@ -4,7 +4,7 @@ import { MARK_CHECK } from './constant.js';
 import c from 'ansis';
 import type { GlobalConfigOptions } from './types.js';
 import { ILogger, NoopLogger } from '@thaitype/core-utils';
-import { BeezeConfig } from '../config.js';
+import { BeezeConfig } from '../BeezeConfig.js';
 
 export const DEFAULT_CONFIG_NAME = 'beeze.config';
 // Allow all JS/TS file extensions except JSON

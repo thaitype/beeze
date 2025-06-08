@@ -1,30 +1,104 @@
 import { PrettyLogger } from '@thaitype/core-utils';
-import { beeze } from './lib';
+import { run, command, boolean, type TypeOf, positional, string } from "@drizzle-team/brocli";
 import { getConfig } from './internal/load-config';
 
-console.log('Starting beeze process...');
+// console.log('Starting beeze process...');
 
-const config = await getConfig({
-}, new PrettyLogger(),);
-if (!config) {
-  throw new Error('Configuration not found. Please ensure beeze.config.js or package.json is set up correctly.');
-}
+// const config = await getConfig({
+// }, new PrettyLogger(),);
+// if (!config) {
+//   throw new Error('Configuration not found. Please ensure beeze.config.js or package.json is set up correctly.');
+// }
 
-console.log('Configuration loaded:', config);
+// console.log('Configuration loaded:', config);
 
-import { run, command, positional } from "@drizzle-team/brocli";
+// const echo = command({
+//   name: "echo",
+//   options: {
+//     text: positional().desc("Text to echo").default("echo"),
+//   },
+//   handler: (opts) => {
+//     console.log(opts.text);
+//   },
+// });
 
-const echo = command({
-  name: "echo",
-  options: {
-    text: positional().desc("Text to echo").default("echo"),
-  },
-  handler: (opts) => {
-    console.log(opts.text);
+// run([echo], {
+//   name: "beeze",
+//   description: "Build tool for tiny Node.js serverless functions and minimal Docker images.",
+//   globals: {},
+//   version: "0.1.0",
+// })
+
+
+// --- Shared Options ---
+const sharedOptions = {
+  watch: boolean("watch")
+    .alias("w")
+    .desc("Enable watch mode (dev only)")
+    .default(false),
+};
+
+// --- Dev Command ---
+const dev = command({
+  name: "dev",
+  desc: "Run in development mode (with optional --watch)",
+  options: sharedOptions,
+  handler: (opts: TypeOf<typeof sharedOptions>) => {
+    console.log("[beeze] dev mode");
+    if (opts.watch) {
+      console.log("Watching for changes...");
+    } else {
+      console.log("Building once in dev mode...");
+    }
+    // todo: invoke your dev build logic here
   },
 });
 
-run([echo])
+// --- Build Command ---
+const build = command({
+  name: "build",
+  desc: "Run a production build (minify, optimized)",
+  options: {},
+  handler: () => {
+    console.log("[beeze] building for production...");
+    // todo: invoke your production build logic here
+  },
+});
+
+// --- Default (no command = dev) ---
+const defaultDev = command({
+  name: "_", // will match if no command is passed
+  desc: "Default command (dev mode)",
+  options: sharedOptions,
+  handler: (opts: TypeOf<typeof sharedOptions>) => {
+    console.log("[beeze] default dev mode");
+    if (opts.watch) {
+      console.log("Watching for changes...");
+    } else {
+      console.log("Building once in dev mode...");
+    }
+    // todo: invoke your dev build logic here
+  },
+});
+
+// --- Run CLI ---
+run([dev, build, defaultDev], {
+  name: "beeze",
+  description: "🐝 Tiny builds that fly — Build tool for serverless functions and Docker images.",
+  version: "0.0.1",
+  globals: {
+    root: string('root')
+      .desc('Set project root directory')
+      .default(process.cwd()),
+  },
+  hook: (event, command, globals) => {
+    if (event === 'before') {
+      process.chdir(globals.root);
+      console.log(`[beeze] Root directory set to: ${globals.root}`);
+    }
+  }
+});
+
 
 // const logger = new PrettyLogger();
 
